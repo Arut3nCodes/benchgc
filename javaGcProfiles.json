@@ -1,0 +1,25 @@
+{
+  "serial": [
+    "-XX:+UseSerialGC"
+  ],
+
+  "g1": [
+    "-XX:+UseG1GC",
+   "-XX:MaxGCPauseMillis=200"
+  ],
+
+  "parallel": [
+    "-XX:+UseParallelGC"
+  ],
+
+  "zgc": [
+    "-XX:+UseZGC",
+    "-XX:MaxGCPauseMillis=10",
+    "-XX:+UnlockExperimentalVMOptions"
+  ],
+
+  "shenandoah": [
+    "-XX:+UseShenandoahGC",
+    "-XX:+UnlockExperimentalVMOptions"
+  ]
+}

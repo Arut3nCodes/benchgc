@@ -1,0 +1,8 @@
+{
+    "default": {
+        "testPath": "./tests/DemoApp.jar",
+        "coresProfile": "single_core",
+        "memoryProfile": "light",
+        "pausesRequired": "short"
+    }
+}
