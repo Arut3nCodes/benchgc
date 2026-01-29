@@ -1,3 +1,4 @@
+from datetime import datetime
 import re
 
 # We define the regex outside the function so it's compiled once for speed
@@ -35,3 +36,31 @@ def transform_line(raw_line):
         "total_mb": to_mb(data['mem_total'], data['u3']),
         "pause_ms": float(data['duration'])
     }
+
+def save_results_to_csv(results, output_path = "results"):
+    """Saves a list of result dictionaries to a CSV file."""
+    import csv
+
+    if not results:
+        print("No results to save.")
+        return
+
+    # Get all unique keys for the header
+    
+    fieldnames = []
+    currTime = datetime.now().strftime("%Y%m%d-%H%M%S")
+    file_name = results[0]["profile_name"] + "_" + results[0]["gc_name"] + "_" + currTime + "_results.csv"
+    output_path = output_path + "/" + file_name
+ 
+    for result in results:
+        for key in result.keys():
+            if key not in fieldnames:
+                fieldnames.append(key)
+
+    with open(output_path, 'w', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for result in results:
+            writer.writerow(result)
+
+    print(f"Results saved to {output_path}")
