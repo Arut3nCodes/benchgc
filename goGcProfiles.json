@@ -1,0 +1,20 @@
+{
+  "default": [
+    "GODEBUG=gctrace=1"
+  ],
+
+  "low_latency": [
+    "GODEBUG=gctrace=1",
+    "GOGC=50"
+  ],
+
+  "high_throughput": [
+    "GODEBUG=gctrace=1",
+    "GOGC=200"
+  ],
+
+  "aggressive": [
+    "GODEBUG=gctrace=1",
+    "GOGC=20"
+  ]
+}

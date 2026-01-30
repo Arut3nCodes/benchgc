@@ -85,7 +85,7 @@ def run_jar(jar_path, app_profile, gc_name, gc_flags, duration, log_path=None):
                 print(line.strip())
         print(list_of_lines)
         list_of_lines = list_of_lines[1:]  # Remove the first entry which may be incomplete
-        da.save_results_to_csv(list_of_lines)
+        da.save_results_to_csv("java", list_of_lines)
         
     except KeyboardInterrupt:
         proc.kill()

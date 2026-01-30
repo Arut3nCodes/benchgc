@@ -37,7 +37,7 @@ def transform_line(raw_line):
         "pause_ms": float(data['duration'])
     }
 
-def save_results_to_csv(results, output_path = "results"):
+def save_results_to_csv(language, results, output_path = "results"):
     """Saves a list of result dictionaries to a CSV file."""
     import csv
 
@@ -49,7 +49,7 @@ def save_results_to_csv(results, output_path = "results"):
     
     fieldnames = []
     currTime = datetime.now().strftime("%Y%m%d-%H%M%S")
-    file_name = results[0]["profile_name"] + "_" + results[0]["gc_name"] + "_" + currTime + "_results.csv"
+    file_name = language + "_" + results[0]["profile_name"] + "_" + results[0]["gc_name"] + "_" + currTime + "_results.csv"
     output_path = output_path + "/" + file_name
  
     for result in results:
@@ -64,3 +64,31 @@ def save_results_to_csv(results, output_path = "results"):
             writer.writerow(result)
 
     print(f"Results saved to {output_path}")
+
+GO_GC_REGEX = re.compile(
+    r"gc\s+(?P<cycle>\d+)\s+@(?P<time>[0-9.]+)s\s+(?P<cpu>\d+)%:"
+    r"\s+(?P<stw1>[0-9.]+)\+(?P<mark>[0-9.]+)\+(?P<stw2>[0-9.]+)\s+ms clock,"
+    r"\s+(?P<cpu1>[0-9.]+)\+(?P<cpu2>[0-9.]+)/(?P<cpu3>[0-9.]+)/(?P<cpu4>[0-9.]+)\+(?P<cpu5>[0-9.]+)\s+ms cpu,"
+    r"\s+(?P<heap_before>\d+)->(?P<heap_after>\d+)->(?P<heap_live>\d+)\s+MB,"
+    r"\s+(?P<goal>\d+)\s+MB goal,.*?(?P<p>\d+)\s+P"
+)
+
+def transform_go_line(line):
+    m = GO_GC_REGEX.search(line)
+    if not m:
+        return None
+
+    return {
+        "cycle": int(m["cycle"]),
+        "time_s": float(m["time"]),
+        "cpu_percent": int(m["cpu"]),
+        "stw_start_ms": float(m["stw1"]),
+        "mark_ms": float(m["mark"]),
+        "stw_end_ms": float(m["stw2"]),
+        "heap_before_mb": int(m["heap_before"]),
+        "heap_after_mb": int(m["heap_after"]),
+        "heap_live_mb": int(m["heap_live"]),
+        "heap_goal_mb": int(m["goal"]),
+        "procs": int(m["p"]),
+    }
+

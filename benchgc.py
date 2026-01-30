@@ -3,7 +3,7 @@ import sys
 import datanalysis as da
 from pathlib import Path
 import javautility as jutil
-# import goutility as gutil
+import goutility as gutil
 
 def run_cli():
     parser = argparse.ArgumentParser(description="BenchGC: Unified GC Benchmarking Tool for multiple programming language environments")
@@ -51,7 +51,26 @@ def run_cli():
             
             jutil.run_jar(test_profile["testPath"], test_profile, args.gc_profile, gc_flags, args.duration, current_log)
     elif args.language == "go":
-        print("Go benchmarking not yet implemented.")
+        gc_profiles = gutil.load_go_gc_profiles(args.config)
+        app_profiles = gutil.load_go_app_profiles(args.app_profiles)
+
+        gc_flags = gc_profiles.get(args.gc_profile, gc_profiles["default"])
+        test_profile = app_profiles.get(args.test_profile, app_profiles["default"])
+
+        for i in range(args.runs):
+            print(f"\n[Run {i+1}/{args.runs}] Profile: {args.gc_profile}")
+
+            current_log = f"{args.out}_run{i}.log" if args.out else None
+
+            gutil.run_go(
+                test_profile["testPath"],
+                test_profile,
+                args.gc_profile,
+                gc_flags,
+                args.duration,
+                current_log
+            )
+
 
 if __name__ == "__main__":
     run_cli()

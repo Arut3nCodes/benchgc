@@ -1,0 +1,9 @@
+{
+  "default": {
+    "profileName": "default",
+    "testPath": "./tests/DemoApp",
+    "coresProfile": "single_core",
+    "memoryProfile": "light",
+    "pausesRequired": "short"
+  }
+}
